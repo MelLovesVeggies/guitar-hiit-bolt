@@ -1,0 +1,325 @@
+/* Sequencer Section */
+.sequencer-section {
+    position: relative;
+    background: var(--gray-100);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    margin: 30px 0;
+}
+
+/* Beat Numbers */
+.beat-numbers {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.beat-number {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--gray-600);
+    padding: 10px;
+}
+
+/* Sequencer Grid */
+.sequencer-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Step Buttons */
+.step-btn {
+    aspect-ratio: 1;
+    border: 5px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    background: var(--white);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.9rem;
+    font-weight: 700;
+    position: relative;
+    min-height: 80px;
+}
+
+
+.step-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.step-btn.active {
+    transform: scale(1.05);
+}
+
+/* Step States */
+.step-btn.down {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    color: var(--white);
+    border-color: #ff6b6b;
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.step-btn.up {
+    background: #4ecdc4;
+    color: var(--white);
+    border-color: black;
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.step-btn.empty {
+    content: "⤫";
+    font-size: 2rem;
+    background: var(--white);
+    color: var(--gray-400);
+    border-color: var(--gray-300);
+}
+
+/* Step Content: intérieur des 8 cases */
+.step-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.step-icon {
+    font-size: 3.2rem;
+}
+
+.step-label {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Playhead */
+.playhead {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc((100% - 70px) / 8 + 10px); /* Ajustement pour alignment parfait */
+    height: 100%;
+    background: rgba(255, 193, 7, 0.3);
+    border: 2px solid var(--warning-color);
+    border-radius: var(--border-radius);
+    transition: left 0.1s ease-out;
+    pointer-events: none;
+    z-index: 10;
+    margin-left: 0; /* Reset du margin */
+}
+
+.playhead.active {
+    background: rgba(255, 193, 7, 0.5);
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+}
+
+/* Pattern Visualization */
+.pattern-preview {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin-top: 20px;
+    border: 2px solid var(--gray-200);
+}
+
+.pattern-preview h4 {
+    margin-bottom: 10px;
+    color: var(--dark-color);
+}
+
+.pattern-notation {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 4px;
+    color: var(--primary-color);
+    background: var(--gray-100);
+    padding: 15px;
+    border-radius: var(--border-radius);
+}
+
+/* Beat Indicator */
+.beat-indicator {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gray-300);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.beat-progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    width: 0%;
+    transition: width 0.1s linear;
+    border-radius: 2px;
+}
+
+/* Sequencer Controls */
+.sequencer-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.sequencer-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.info-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.quick-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--gray-200);
+    color: var(--dark-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.quick-btn:hover {
+    background: var(--gray-300);
+}
+
+.quick-btn.danger {
+    background: var(--danger-color);
+    color: var(--white);
+}
+
+.quick-btn.danger:hover {
+    background: #ff5252;
+}
+
+/* Step Animations */
+.step-btn.hit {
+    animation: stepHit 0.2s ease-out;
+}
+
+@keyframes stepHit {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); }
+    100% { transform: scale(1); }
+}
+
+/* Responsive Sequencer Grid */
+@media (max-width: 768px) {
+    .sequencer-grid {
+        gap: 5px;
+    }
+    
+    .step-btn {
+        min-height: 60px;
+        font-size: 1.2rem;
+    }
+    
+    .step-icon {
+        font-size: 1.5rem;
+    }
+    
+    .step-label {
+        font-size: 0.7rem;
+    }
+    
+    .beat-numbers {
+        gap: 5px;
+    }
+    
+    .beat-number {
+        font-size: 0.9rem;
+        padding: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sequencer-section {
+        padding: 15px;
+    }
+    
+    .step-btn {
+        min-height: 50px;
+        font-size: 1rem;
+    }
+    
+    .step-icon {
+        font-size: 1.2rem;
+    }
+    
+    .step-label {
+        font-size: 0.6rem;
+    }
+    
+    .pattern-notation {
+        font-size: 1rem;
+        letter-spacing: 2px;
+    }
+}
+
+/* Marquer visuellement les contretemps */
+.step-btn[data-step="1"],
+.step-btn[data-step="3"], 
+.step-btn[data-step="5"],
+.step-btn[data-step="7"] {
+    border-style: dashed;
+    opacity: 0.9;
+}
+
+/* Empêcher l'état 'up' sur les contretemps */
+.step-btn[data-step="1"].up,
+.step-btn[data-step="3"].up,
+.step-btn[data-step="5"].up,
+.step-btn[data-step="7"].up {
+    /* Ces états ne devraient jamais exister, mais au cas où */
+    background: var(--danger-color) !important;
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}

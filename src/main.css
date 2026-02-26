@@ -1,0 +1,527 @@
+/* Reset et base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #8c52ff;
+    --secondary-color: #4907bbe4;
+    --accent-color: #f093fb;
+    --success-color: #00bf63;
+    --warning-color: #4907bbe4;
+    --danger-color: #ff6b6b;
+    --dark-color: #2c3e50;
+    --light-color: #ecf0f1;
+    --white: #ffffff;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-400: #ced4da;
+    --gray-500: #adb5bd;
+    --gray-600: #6c757d;
+    --gray-700: #495057;
+    --gray-800: #343a40;
+    --gray-900: #212529;
+    
+    --border-radius: 8px;
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--success-color) 100%);
+    min-height: 100vh;
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+.app-header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--white);
+}
+
+.app-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.app-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Main Content */
+.main-content {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+/* Sections */
+section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--dark-color);
+    font-weight: 600;
+}
+
+/* Transport Controls */
+.transport-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.transport-controls {
+    display: flex;
+    gap: 15px;
+}
+
+.transport-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--primary-color);
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.transport-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.transport-btn:active {
+    transform: translateY(0);
+}
+
+.transport-btn.active {
+    background: var(--success-color);
+}
+
+.transport-btn.loop-btn.active {
+    background: var(--warning-color);
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+}
+
+/* Tempo Control */
+.tempo-control {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.tempo-control label {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+#tempo-slider {
+    width: 150px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--gray-300);
+    outline: none;
+    cursor: pointer;
+}
+
+#tempo-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#tempo-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#tempo-display {
+    font-weight: 700;
+    color: var(--primary-color);
+    min-width: 70px;
+}
+
+/* Buttons aléatoire effacer remplir*/
+.pattern-btn, .action-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--gray-200);
+    color: var(--dark-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.pattern-btn:hover, .action-btn:hover {
+    background: var(--gray-300);
+    transform: translateY(-1px);
+}
+
+.action-btn {
+    background: var(--success-color);
+    color: var(--white);
+}
+
+.action-btn:hover {
+    background: #45b7aa;
+}
+
+/* Pattern Controls */
+.pattern-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.pattern-info {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+#pattern-name {
+    padding: 10px 15px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+#pattern-name:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Grids */
+.presets-grid, .songs-grid, .user-patterns-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+/* Cards */
+.preset-card, .song-card, .user-pattern-card {
+    background: var(--gray-100);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 2px solid transparent;
+}
+
+.preset-card:hover, .song-card:hover, .user-pattern-card:hover {
+    background: var(--gray-200);
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
+}
+
+.preset-card.active, .song-card.active, .user-pattern-card.active {
+    border-color: var(--primary-color);
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.card-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--dark-color);
+}
+
+.card-subtitle {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.card-tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Songs Filter */
+.songs-filter {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#songs-search, #difficulty-filter {
+    padding: 10px 15px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+#songs-search:focus, #difficulty-filter:focus {
+    border-color: var(--primary-color);
+}
+
+#songs-search {
+    flex: 1;
+}
+
+/* User Patterns Controls */
+.user-patterns-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Footer */
+.app-footer {
+    text-align: center;
+    color: var(--white);
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 0.3s ease-in-out;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--gray-300);
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.bass-note-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bass-note-control label {
+    font-weight: 600;
+    color: var(--dark-color);
+    white-space: nowrap;
+}
+
+#bass-note-select {
+    padding: 8px 12px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    background: var(--white);
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition);
+    min-width: 100px;
+}
+
+#bass-note-select:focus {
+    border-color: var(--primary-color);
+}
+
+/* Message de chargement des banques de sons */
+.audio-status {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 8px 15px;
+    border-radius: var(--border-radius);
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.audio-status.ready {
+    background: var(--success-color);
+}
+
+.audio-status.error {
+    background: var(--danger-color);
+}
+
+/* Section Batterie */
+.drums-section {
+    background: var(--gray-100);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.drums-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.drums-toggle {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Switch Toggle */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--gray-300);
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--success-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Volume Controls */
+.drums-volume {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.volume-control label {
+    min-width: 100px;
+    font-weight: 600;
+}
+
+.volume-control input[type="range"] {
+    flex: 1;
+}
+
+.volume-value {
+    min-width: 40px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Drums Info */
+.drums-info {
+    background: var(--white);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+}
+
+.drums-info p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+}

@@ -1,0 +1,295 @@
+/* Mobile First Responsive Design */
+
+/* Extra Small devices (phones, 320px and up) */
+@media (max-width: 575.98px) {
+    .app-container {
+        padding: 10px;
+    }
+    
+    .app-header h1 {
+        font-size: 2rem;
+    }
+    
+    .app-header p {
+        font-size: 1rem;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    /* Transport Controls */
+    .transport-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .transport-controls {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .transport-btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .tempo-control {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    #tempo-slider {
+        width: 120px;
+    }
+    
+    /* Pattern Controls */
+    .pattern-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .pattern-btn {
+        flex: 1;
+        min-width: 80px;
+        font-size: 0.9rem;
+    }
+    
+    .pattern-info {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    #pattern-name {
+        margin-bottom: 10px;
+    }
+    
+    /* Grids */
+    .presets-grid, .songs-grid, .user-patterns-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    /* Cards */
+    .preset-card, .song-card, .user-pattern-card {
+        padding: 15px;
+    }
+    
+    /* Songs Filter */
+    .songs-filter {
+        flex-direction: column;
+    }
+    
+    /* User Patterns Controls */
+    .user-patterns-controls {
+        flex-direction: column;
+    }
+    
+    .action-btn {
+        width: 100%;
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .presets-grid, .songs-grid, .user-patterns-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .transport-controls {
+        justify-content: center;
+    }
+    
+    .pattern-controls {
+        justify-content: center;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .presets-grid, .songs-grid, .user-patterns-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .transport-section {
+        flex-direction: row;
+    }
+    
+    .sequencer-controls {
+        flex-direction: row;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .presets-grid, .songs-grid, .user-patterns-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .presets-grid, .songs-grid, .user-patterns-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .app-container {
+        max-width: 1400px;
+    }
+}
+
+/* Landscape Orientation */
+@media (orientation: landscape) and (max-height: 500px) {
+    .app-header {
+        margin-bottom: 20px;
+    }
+    
+    .app-header h1 {
+        font-size: 2rem;
+    }
+    
+    .app-header p {
+        display: none;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    .sequencer-section {
+        padding: 20px;
+    }
+    
+    section {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .step-btn {
+        border-width: 2px;
+    }
+    
+    .playhead {
+        border-width: 1px;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .step-btn:hover {
+        transform: none;
+    }
+    
+    .transport-btn:hover {
+        transform: none;
+    }
+    
+    .preset-card:hover, 
+    .song-card:hover, 
+    .user-pattern-card:hover {
+        transform: none;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --white: #1a1a1a;
+        --gray-100: #2d2d2d;
+        --gray-200: #3d3d3d;
+        --gray-300: #4d4d4d;
+        --dark-color: #ffffff;
+        --light-color: #2c3e50;
+    }
+    
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+    
+    .main-content {
+        background: var(--gray-100);
+        color: var(--dark-color);
+    }
+    
+    .step-btn.empty {
+        background: var(--gray-200);
+        color: var(--gray-400);
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .transport-section,
+    .pattern-controls,
+    .user-patterns-controls {
+        display: none !important;
+    }
+    
+    .main-content {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+    }
+    
+    .sequencer-section {
+        break-inside: avoid;
+    }
+}
+
+/* Accessibility Enhancements */
+@media (prefers-contrast: high) {
+    .step-btn {
+        border-width: 3px;
+    }
+    
+    .step-btn.down {
+        background: #cc0000;
+        border-color: #990000;
+    }
+    
+    .step-btn.up {
+        background: #006600;
+        border-color: #004400;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (pointer: coarse) {
+    .step-btn {
+        min-height: 60px;
+    }
+    
+    .transport-btn {
+        min-height: 48px;
+        padding: 12px 20px;
+    }
+    
+    .pattern-btn, .action-btn {
+        min-height: 44px;
+        padding: 12px 20px;
+    }
+    
+    #tempo-slider {
+        height: 8px;
+    }
+    
+    #tempo-slider::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+    }
+}

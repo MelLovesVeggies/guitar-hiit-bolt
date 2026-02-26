@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyStrum Sequencer</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/sequencer.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>EasyStrum - Outil d'entrainement au strumming</h1>
+            <p>Jouez sur des rythmiques célèbres et créez vos patterns de strumming pour vous entrainer</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Transport Controls -->
+            <section class="transport-section">
+                <!-- Dans la section transport-section, ajoutez -->
+<div class="audio-status" id="audio-status">
+    🎵 Veuillez patienter quelques secondes en attendant le chargement des banques de sons.
+</div>
+<br>
+                <div class="transport-controls">
+                    <button id="play-btn" class="transport-btn play-btn">
+                        <span class="btn-icon">▶</span>
+                        <span class="btn-text">Play</span>
+                    </button>
+                    <button id="stop-btn" class="transport-btn stop-btn">
+                        <span class="btn-icon">⏹</span>
+                        <span class="btn-text">Stop</span>
+                    </button>
+                    <button id="loop-btn" class="transport-btn loop-btn">
+                        <span class="btn-icon">🔁</span>
+                        <span class="btn-text">Loop</span>
+                    </button>
+                </div>
+                
+                <div class="tempo-control">
+                    <label for="tempo-slider">Tempo:</label>
+                    <input type="range" id="tempo-slider" min="60" max="200" value="120">
+                    <span id="tempo-display">120 BPM</span>
+                </div>
+
+                <div class="loading-indicator" id="bass-loading" style="display: none;">
+    <span>📁 Chargement des échantillons de basse...</span>
+    <div class="loading-progress" id="loading-progress">0/7</div>
+</div>
+            </section>
+
+            <!-- Dans index.html, après la section transport-section -->
+<section class="drums-section">
+    <h3>🥁 Section rythmique automatique</h3>
+    
+    <div class="drums-controls">
+        <div class="drums-toggle">
+            <label class="switch">
+                <input type="checkbox" id="drums-enabled" checked>
+                <span class="slider"><strong>ON OFF</strong></span>
+            </label>
+        </div>
+        
+        <div class="drums-volume">
+            <div class="volume-control">
+                <label for="kick-volume">Grosse caisse:</label>
+                <input type="range" id="kick-volume" min="0" max="100" value="80">
+                <span class="volume-value">80%</span>
+            </div>
+            
+            <div class="volume-control">
+                <label for="snare-volume">Caisse claire:</label>
+                <input type="range" id="snare-volume" min="0" max="100" value="70">
+                <span class="volume-value">70%</span>
+            </div>
+            
+            <div class="volume-control">
+                <label for="hihat-volume">Charleston:</label>
+                <input type="range" id="hihat-volume" min="0" max="100" value="50">
+                <span class="volume-value">50%</span>
+            </div>
+        </div>
+        
+        <div class="drums-info">
+            <p>📍 Grosse caisse automatique sur temps <strong>1</strong> et <strong>3</strong></p>
+            <p>🎵 Caisse claire automatique sur temps <strong>2</strong> et <strong>4</strong></p>
+            <p>🔔 Charleston sur <strong>tous les coups joués</strong></p>
+        </div>
+    </div>
+</section>
+
+
+            
+
+            <!-- Contrôle notes basse-->
+<div class="bass-note-control">
+    <label for="bass-note-select">Note basse:</label>
+    <select id="bass-note-select">
+        <option value="E">Mi (E)</option>
+        <option value="A">La (A)</option>
+        <option value="D">Ré (D)</option>
+        <option value="G">Sol (G)</option>
+        <option value="C">Do (C)</option>
+        <option value="F">Fa (F)</option>
+        <option value="B">Si (B)</option>
+    </select>
+</div>
+
+
+            <!-- Sequencer Grid -->
+            <section class="sequencer-section">
+                <div class="beat-numbers">
+                    <div class="beat-number">1</div>
+                    <div class="beat-number">+</div>
+                    <div class="beat-number">2</div>
+                    <div class="beat-number">+</div>
+                    <div class="beat-number">3</div>
+                    <div class="beat-number">+</div>
+                    <div class="beat-number">4</div>
+                    <div class="beat-number">+</div>
+                </div>
+                
+                <div class="sequencer-grid" id="sequencer-grid">
+                    <!-- Les 8 steps seront générés dynamiquement -->
+                </div>
+                
+                <div class="playhead" id="playhead"></div>
+            </section>
+
+            <section class="pattern-section">
+    <div class="pattern-controls">
+        <button id="clear-btn">Effacer</button>     <!-- Vider le pattern -->
+        <button id="fill-btn">Remplir</button>      <!-- Remplir toutes les cases -->
+        <button id="random-btn">Aléatoire</button>  <!-- Pattern aléatoire -->
+    </div>
+    
+    <div class="pattern-info">
+        <input id="pattern-name" placeholder="Nom du pattern">
+        <button id="save-btn">Sauvegarder</button>
+    </div>
+</section>
+
+    
+            <!-- Presets Section -->
+            <section class="presets-section">
+                <h3>Patterns prédéfinis</h3>
+                <div class="presets-grid" id="presets-grid">
+                    <!-- Les presets seront chargés dynamiquement -->
+                </div>
+            </section>
+
+            <!-- Songs Library -->
+            <section class="songs-section">
+                <h3>Chansons populaires</h3>
+                <div class="songs-filter">
+                    <input type="text" id="songs-search" placeholder="Rechercher une chanson...">
+                    <select id="difficulty-filter">
+                        <option value="">Toutes difficultés</option>
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="songs-grid" id="songs-grid">
+                    <!-- Les chansons seront chargées dynamiquement -->
+                </div>
+            </section>
+
+            <!-- User Patterns -->
+            <section class="user-patterns-section">
+                <h3>Mes patterns</h3>
+                <div class="user-patterns-controls">
+                    <button id="export-btn" class="action-btn">Exporter</button>
+                    <button id="import-btn" class="action-btn">Importer</button>
+                    <input type="file" id="import-file" accept=".json" style="display: none;">
+                </div>
+                <div class="user-patterns-grid" id="user-patterns-grid">
+                    <!-- Les patterns utilisateur seront chargés dynamiquement -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>EasyStrum - Outil pédagogique pour l'apprentissage de la guitare</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/audio-manager.js"></script>
+    <script src="js/bass-synthesizer.js"></script>
+    <script src="js/sequencer-engine.js"></script>
+    <script src="js/pattern-library.js"></script>
+    <script src="js/preset-manager.js"></script>
+    <script src="js/storage-manager.js"></script>
+    <script src="js/ui-sequencer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+    </html>
+
+    
+    
