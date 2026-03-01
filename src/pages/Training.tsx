@@ -4,6 +4,7 @@ import { useTrainingStore } from '../store/useTrainingStore';
 import { useHIITTimer } from '../hooks/useHIITTimer';
 import { useAudioAnalyzer } from '../hooks/useAudioAnalyzer';
 import { ProgressRing } from '../components/ProgressRing';
+import { StrummingPatternSelector } from '../components/StrummingPatternSelector';
 import { supabase, Exercise } from '../lib/supabase';
 import { calculateRepetitions, calculatePrecision, calculateTimingWindow } from '../lib/calculations';
 
@@ -177,6 +178,7 @@ export function Training({ exercise, onBack }: TrainingProps) {
   };
 
   const progress = totalRepetitions > 0 ? (completedRepetitions / totalRepetitions) * 100 : 0;
+  const [showStrumming, setShowStrumming] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -189,6 +191,7 @@ export function Training({ exercise, onBack }: TrainingProps) {
           <span>Back to Exercises</span>
         </button>
 
+        {!showStrumming ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
@@ -314,7 +317,7 @@ export function Training({ exercise, onBack }: TrainingProps) {
 
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Exercise Info</h3>
-              <div className="space-y-2 text-sm">
+              <div className="space-y-2 text-sm mb-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Type:</span>
                   <span className="font-semibold capitalize">{exercise.exercise_type}</span>
@@ -332,9 +335,30 @@ export function Training({ exercise, onBack }: TrainingProps) {
                   <span className="font-semibold">{exercise.bpm_min}-{exercise.bpm_max}</span>
                 </div>
               </div>
+
+              {exercise.exercise_type === 'strumming' && (
+                <button
+                  onClick={() => setShowStrumming(true)}
+                  className="w-full mt-4 bg-gradient-to-r from-[#8c52ff] to-[#00bf63] text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition"
+                >
+                  View Strumming Patterns
+                </button>
+              )}
             </div>
           </div>
         </div>
+        ) : (
+          <div>
+            <button
+              onClick={() => setShowStrumming(false)}
+              className="mb-6 flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Exercise</span>
+            </button>
+            <StrummingPatternSelector currentBPM={currentBPM} isActive={audioActive} />
+          </div>
+        )}
       </div>
 
       {showBPMModal && (

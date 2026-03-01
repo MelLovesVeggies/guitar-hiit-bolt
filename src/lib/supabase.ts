@@ -46,3 +46,17 @@ export interface TrainingSession {
   session_date: string;
   created_at: string;
 }
+
+export interface StrummingPattern {
+  id: string;
+  name: string;
+  description: string;
+  pattern: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  bpm_range_min: number;
+  bpm_range_max: number;
+  time_signature: string;
+  genre: string | null;
+  created_at: string;
+  updated_at: string;
+}
