@@ -4,8 +4,8 @@ import { useTrainingStore } from '../store/useTrainingStore';
 import { useHIITTimer } from '../hooks/useHIITTimer';
 import { useAudioAnalyzer } from '../hooks/useAudioAnalyzer';
 import { ProgressRing } from '../components/ProgressRing';
-import { StrummingPatternSelector } from '../components/StrummingPatternSelector';
-import { supabase, Exercise } from '../lib/supabase';
+import { Strumming } from '../components/Strumming';
+import { supabase, Exercise, StrummingPattern } from '../lib/supabase';
 import { calculateRepetitions, calculatePrecision, calculateTimingWindow } from '../lib/calculations';
 
 interface TrainingProps {
@@ -179,6 +179,39 @@ export function Training({ exercise, onBack }: TrainingProps) {
 
   const progress = totalRepetitions > 0 ? (completedRepetitions / totalRepetitions) * 100 : 0;
   const [showStrumming, setShowStrumming] = useState(false);
+  const [strummingPattern, setStrummingPattern] = useState<StrummingPattern | null>(null);
+  const [loadingPattern, setLoadingPattern] = useState(false);
+
+  useEffect(() => {
+    if (exercise.exercise_type === 'strumming') {
+      loadDefaultStrummingPattern();
+    }
+  }, [exercise]);
+
+  const loadDefaultStrummingPattern = async () => {
+    try {
+      setLoadingPattern(true);
+      const { data, error } = await supabase
+        .from('strumming_patterns')
+        .select('*')
+        .eq('difficulty', exercise.difficulty)
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+      setStrummingPattern(data);
+    } catch (error) {
+      console.error('Error loading strumming pattern:', error);
+      const { data } = await supabase
+        .from('strumming_patterns')
+        .select('*')
+        .limit(1)
+        .maybeSingle();
+      setStrummingPattern(data);
+    } finally {
+      setLoadingPattern(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -196,12 +229,25 @@ export function Training({ exercise, onBack }: TrainingProps) {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">{exercise.title}</h2>
-              <div className="aspect-video bg-gradient-to-br from-[#8c52ff] to-[#00bf63] rounded-lg flex items-center justify-center text-white text-6xl">
-                {exercise.exercise_type === 'strumming' && '🎸'}
-                {exercise.exercise_type === 'fingerpicking' && '🎵'}
-                {exercise.exercise_type === 'transitions' && '🔄'}
-                {exercise.exercise_type === 'riffs' && '⚡'}
-              </div>
+              {exercise.exercise_type === 'strumming' && strummingPattern && !loadingPattern ? (
+                <Strumming
+                  pattern={strummingPattern}
+                  isActive={audioActive}
+                  currentBPM={currentBPM}
+                  onBPMChange={setCurrentBPM}
+                  isCompact={true}
+                />
+              ) : exercise.exercise_type === 'strumming' && loadingPattern ? (
+                <div className="aspect-video bg-gradient-to-br from-[#8c52ff] to-[#00bf63] rounded-lg flex items-center justify-center text-white">
+                  <p>Loading pattern...</p>
+                </div>
+              ) : (
+                <div className="aspect-video bg-gradient-to-br from-[#8c52ff] to-[#00bf63] rounded-lg flex items-center justify-center text-white text-6xl">
+                  {exercise.exercise_type === 'fingerpicking' && '🎵'}
+                  {exercise.exercise_type === 'transitions' && '🔄'}
+                  {exercise.exercise_type === 'riffs' && '⚡'}
+                </div>
+              )}
             </div>
 
             <div className="bg-white rounded-lg shadow-lg p-6">
@@ -341,7 +387,7 @@ export function Training({ exercise, onBack }: TrainingProps) {
                   onClick={() => setShowStrumming(true)}
                   className="w-full mt-4 bg-gradient-to-r from-[#8c52ff] to-[#00bf63] text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition"
                 >
-                  View Strumming Patterns
+                  All Strumming Patterns
                 </button>
               )}
             </div>

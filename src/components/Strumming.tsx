@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Play, Pause, RotateCcw } from 'lucide-react';
+import { Play, Pause, RotateCcw, Plus, Minus } from 'lucide-react';
 import { StrummingPattern } from '../lib/supabase';
 
 interface StrummingProps {
   pattern: StrummingPattern;
   isActive: boolean;
   currentBPM: number;
+  onBPMChange?: (bpm: number) => void;
+  isCompact?: boolean;
 }
 
-export function Strumming({ pattern, isActive, currentBPM }: StrummingProps) {
+export function Strumming({ pattern, isActive, currentBPM, onBPMChange, isCompact }: StrummingProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentBeat, setCurrentBeat] = useState(0);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
@@ -97,6 +99,93 @@ export function Strumming({ pattern, isActive, currentBPM }: StrummingProps) {
     return stroke;
   };
 
+  const handleIncreaseBPM = () => {
+    const newBPM = Math.min(currentBPM + 5, pattern.bpm_range_max);
+    onBPMChange?.(newBPM);
+  };
+
+  const handleDecreaseBPM = () => {
+    const newBPM = Math.max(currentBPM - 5, pattern.bpm_range_min);
+    onBPMChange?.(newBPM);
+  };
+
+  if (isCompact) {
+    return (
+      <div className="bg-gradient-to-br from-blue-50 to-teal-50 rounded-lg p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">{pattern.name}</h3>
+
+        <div className="mb-6 p-4 bg-white rounded-lg">
+          <div className="flex justify-center gap-2 mb-4 flex-wrap">
+            {strokes.map((stroke, index) => (
+              <div key={index} className="flex flex-col items-center gap-1">
+                <div
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-white transition-all duration-75 text-sm ${getStrokeColor(
+                    stroke,
+                    index
+                  )}`}
+                >
+                  {getStrokeLabel(stroke)}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-center gap-2 mb-4 flex-wrap">
+            <button
+              onClick={togglePlayback}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition text-sm ${
+                isPlaying
+                  ? 'bg-red-500 hover:bg-red-600 text-white'
+                  : 'bg-green-500 hover:bg-green-600 text-white'
+              }`}
+            >
+              {isPlaying ? (
+                <>
+                  <Pause className="w-4 h-4" />
+                  Pause
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4" />
+                  Play
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={handleReset}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-lg font-semibold transition text-sm"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Reset
+            </button>
+          </div>
+
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={handleDecreaseBPM}
+              disabled={currentBPM <= pattern.bpm_range_min}
+              className="p-1 bg-gray-300 hover:bg-gray-400 disabled:opacity-50 rounded text-sm"
+            >
+              <Minus className="w-4 h-4" />
+            </button>
+            <div className="text-center min-w-[60px]">
+              <div className="text-xs text-gray-600">Tempo</div>
+              <div className="text-xl font-bold text-[#8c52ff]">{currentBPM}</div>
+            </div>
+            <button
+              onClick={handleIncreaseBPM}
+              disabled={currentBPM >= pattern.bpm_range_max}
+              className="p-1 bg-gray-300 hover:bg-gray-400 disabled:opacity-50 rounded text-sm"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="mb-6">
@@ -132,7 +221,7 @@ export function Strumming({ pattern, isActive, currentBPM }: StrummingProps) {
           ))}
         </div>
 
-        <div className="flex justify-center gap-3">
+        <div className="flex justify-center gap-3 mb-4">
           <button
             onClick={togglePlayback}
             className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition ${
@@ -160,6 +249,27 @@ export function Strumming({ pattern, isActive, currentBPM }: StrummingProps) {
           >
             <RotateCcw className="w-5 h-5" />
             Reset
+          </button>
+        </div>
+
+        <div className="flex items-center justify-center gap-4">
+          <button
+            onClick={handleDecreaseBPM}
+            disabled={currentBPM <= pattern.bpm_range_min}
+            className="p-2 bg-gray-300 hover:bg-gray-400 disabled:opacity-50 rounded-lg"
+          >
+            <Minus className="w-5 h-5" />
+          </button>
+          <div className="text-center min-w-[80px]">
+            <div className="text-xs text-gray-600">Tempo</div>
+            <div className="text-2xl font-bold text-[#8c52ff]">{currentBPM}</div>
+          </div>
+          <button
+            onClick={handleIncreaseBPM}
+            disabled={currentBPM >= pattern.bpm_range_max}
+            className="p-2 bg-gray-300 hover:bg-gray-400 disabled:opacity-50 rounded-lg"
+          >
+            <Plus className="w-5 h-5" />
           </button>
         </div>
       </div>
