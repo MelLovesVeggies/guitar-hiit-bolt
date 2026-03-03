@@ -39,17 +39,20 @@ export function Strumming({ pattern, isActive, currentBPM, onBPMChange, isCompac
   useEffect(() => {
     if (!isPlaying || !audioContext || !isActive) return;
 
-    nextStepTimeRef.current = audioContext.currentTime;
+    const startTime = audioContext.currentTime;
+    const stepDurationSeconds = stepLengthMs / 1000;
+    let lastUpdatedStep = -1;
 
     const schedule = () => {
-      const currentTime = audioContext.currentTime;
+      const elapsed = audioContext.currentTime - startTime;
+      const currentStepIndex = Math.floor(elapsed / stepDurationSeconds) % strokes.length;
 
-      while (nextStepTimeRef.current < currentTime + 0.1) {
-        const stepIndex = Math.floor((nextStepTimeRef.current - (audioContext.currentTime - currentBeat * stepLengthMs / 1000)) / (stepLengthMs / 1000)) % strokes.length;
-        playBeat(stepIndex);
-        setCurrentBeat(stepIndex);
-        nextStepTimeRef.current += stepLengthMs / 1000;
+      if (currentStepIndex !== lastUpdatedStep) {
+        playBeat(currentStepIndex);
+        lastUpdatedStep = currentStepIndex;
       }
+
+      setCurrentBeat(currentStepIndex);
     };
 
     timerIdRef.current = setInterval(schedule, 25);
