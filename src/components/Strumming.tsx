@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Plus, Minus } from 'lucide-react';
 import { StrummingPattern } from '../lib/supabase';
 
@@ -14,9 +14,14 @@ export function Strumming({ pattern, isActive, currentBPM, onBPMChange, isCompac
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentBeat, setCurrentBeat] = useState(0);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+  const playheadRef = useRef<HTMLDivElement>(null);
+  const containerRefCompact = useRef<HTMLDivElement>(null);
+  const containerRefFull = useRef<HTMLDivElement>(null);
+  const nextStepTimeRef = useRef(0);
+  const timerIdRef = useRef<NodeJS.Timeout | null>(null);
 
   const strokes = pattern.pattern.split(' ').filter(s => s.length > 0);
-  const beatDurationMs = (60 / currentBPM) * 1000;
+  const stepLengthMs = (60 / currentBPM / 2) * 1000;
 
   useEffect(() => {
     if (!isActive) return;
@@ -34,20 +39,25 @@ export function Strumming({ pattern, isActive, currentBPM, onBPMChange, isCompac
   useEffect(() => {
     if (!isPlaying || !audioContext || !isActive) return;
 
-    const interval = setInterval(() => {
-      setCurrentBeat(prev => {
-        const next = (prev + 1) % strokes.length;
-        if (next === 0 && prev !== 0) {
-          playBeat(next);
-        } else {
-          playBeat(next);
-        }
-        return next;
-      });
-    }, beatDurationMs);
+    nextStepTimeRef.current = audioContext.currentTime;
 
-    return () => clearInterval(interval);
-  }, [isPlaying, audioContext, isActive, beatDurationMs, strokes.length]);
+    const schedule = () => {
+      const currentTime = audioContext.currentTime;
+
+      while (nextStepTimeRef.current < currentTime + 0.1) {
+        const stepIndex = Math.floor((nextStepTimeRef.current - (audioContext.currentTime - currentBeat * stepLengthMs / 1000)) / (stepLengthMs / 1000)) % strokes.length;
+        playBeat(stepIndex);
+        setCurrentBeat(stepIndex);
+        nextStepTimeRef.current += stepLengthMs / 1000;
+      }
+    };
+
+    timerIdRef.current = setInterval(schedule, 25);
+
+    return () => {
+      if (timerIdRef.current) clearInterval(timerIdRef.current);
+    };
+  }, [isPlaying, audioContext, isActive, stepLengthMs, strokes.length]);
 
   const playBeat = (beatIndex: number) => {
     if (!audioContext) return;
@@ -74,6 +84,25 @@ export function Strumming({ pattern, isActive, currentBPM, onBPMChange, isCompac
       osc.stop(now + 0.05);
     }
   };
+
+  useEffect(() => {
+    if (!playheadRef.current) return;
+
+    const containerRef = isCompact ? containerRefCompact.current : containerRefFull.current;
+    if (!containerRef) return;
+
+    const buttons = containerRef.querySelectorAll('[data-stroke-index]');
+    if (buttons.length === 0) return;
+
+    const currentButton = buttons[currentBeat] as HTMLElement;
+    if (!currentButton) return;
+
+    const containerRect = containerRef.getBoundingClientRect();
+    const buttonRect = currentButton.getBoundingClientRect();
+
+    const playheadLeft = buttonRect.left - containerRect.left + buttonRect.width / 2;
+    playheadRef.current.style.left = `${playheadLeft}px`;
+  }, [currentBeat, strokes.length, isCompact]);
 
   const togglePlayback = () => {
     setIsPlaying(!isPlaying);
@@ -115,19 +144,30 @@ export function Strumming({ pattern, isActive, currentBPM, onBPMChange, isCompac
         <h3 className="text-xl font-bold text-gray-900 mb-4">{pattern.name}</h3>
 
         <div className="mb-6 p-4 bg-white rounded-lg">
-          <div className="flex justify-center gap-2 mb-4 flex-wrap">
-            {strokes.map((stroke, index) => (
-              <div key={index} className="flex flex-col items-center gap-1">
-                <div
-                  className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-white transition-all duration-75 text-sm ${getStrokeColor(
-                    stroke,
-                    index
-                  )}`}
-                >
-                  {getStrokeLabel(stroke)}
+          <div className="relative mb-6">
+            <div ref={containerRefCompact} className="flex justify-center gap-2 mb-4 flex-wrap relative">
+              {strokes.map((stroke, index) => (
+                <div key={index} className="flex flex-col items-center gap-1" data-stroke-index={index}>
+                  <div
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-white transition-all duration-75 text-sm ${getStrokeColor(
+                      stroke,
+                      index
+                    )}`}
+                  >
+                    {getStrokeLabel(stroke)}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            {isPlaying && (
+              <div
+                ref={playheadRef}
+                className="absolute top-0 w-1 h-full bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full shadow-lg transition-all duration-75"
+                style={{
+                  filter: 'drop-shadow(0 0 4px rgba(251, 191, 36, 0.8))',
+                }}
+              />
+            )}
           </div>
 
           <div className="flex justify-center gap-2 mb-4 flex-wrap">
@@ -205,20 +245,31 @@ export function Strumming({ pattern, isActive, currentBPM, onBPMChange, isCompac
       </div>
 
       <div className="mb-8 p-6 bg-gray-50 rounded-lg">
-        <div className="flex justify-center gap-2 mb-4 flex-wrap">
-          {strokes.map((stroke, index) => (
-            <div key={index} className="flex flex-col items-center gap-2">
-              <div
-                className={`w-12 h-12 rounded-lg flex items-center justify-center font-bold text-white transition-all duration-75 ${getStrokeColor(
-                  stroke,
-                  index
-                )}`}
-              >
-                {getStrokeLabel(stroke)}
+        <div className="relative mb-6">
+          <div ref={containerRefFull} className="flex justify-center gap-2 mb-4 flex-wrap relative">
+            {strokes.map((stroke, index) => (
+              <div key={index} className="flex flex-col items-center gap-2" data-stroke-index={index}>
+                <div
+                  className={`w-12 h-12 rounded-lg flex items-center justify-center font-bold text-white transition-all duration-75 ${getStrokeColor(
+                    stroke,
+                    index
+                  )}`}
+                >
+                  {getStrokeLabel(stroke)}
+                </div>
+                <span className="text-xs text-gray-600">{index + 1}</span>
               </div>
-              <span className="text-xs text-gray-600">{index + 1}</span>
-            </div>
-          ))}
+            ))}
+          </div>
+          {isPlaying && (
+            <div
+              ref={playheadRef}
+              className="absolute top-0 w-1 h-full bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full shadow-lg transition-all duration-75"
+              style={{
+                filter: 'drop-shadow(0 0 6px rgba(251, 191, 36, 0.9))',
+              }}
+            />
+          )}
         </div>
 
         <div className="flex justify-center gap-3 mb-4">
